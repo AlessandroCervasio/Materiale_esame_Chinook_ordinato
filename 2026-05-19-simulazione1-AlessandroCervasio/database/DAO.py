@@ -4,6 +4,8 @@ from model.genre import Genre
 
 
 class DAO():
+
+    # tutti i generi
     @staticmethod
     def getAllGenres():
         conn = DBConnect.get_connection()
@@ -23,6 +25,7 @@ class DAO():
         conn.close()
         return result
 
+    # tutti gli artisti
     @staticmethod
     def getAllArtists():
         conn = DBConnect.get_connection()
@@ -43,6 +46,7 @@ class DAO():
         conn.close()
         return result
 
+    # tutti gli artisti dato il genreId - all artists with genre
     @staticmethod
     def getArtistGenre(genreId):
         conn = DBConnect.get_connection()
@@ -69,6 +73,7 @@ class DAO():
         conn.close()
         return result
 
+    # coppie di artisti per cui un almeno un cliente ha comprato una traccia di entrambi
     @staticmethod
     def getCoppieArtistGenre(genreId):
         conn = DBConnect.get_connection()
@@ -105,6 +110,8 @@ class DAO():
         cursor.close()
         conn.close()
         return result
+
+    # popolarità dell'artista (totale delle tracce vendute)
 
     @staticmethod
     def getPopolaritaArtistGenre(artistId, genreId):
