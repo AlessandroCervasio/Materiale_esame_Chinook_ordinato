@@ -17,16 +17,19 @@ class Model:
 
         self._camminoPesoASC=[]
 
-
+    # all musical genres - tutti i generi musicali
     def getAllGenres(self):
         return DAO.getAllGenres()
-
+    # all artists - tutti gli artisti
     def getAllArtists(self):
         return DAO.getAllArtists()
-
+    # all artists from a given genre - tutti gli artisti dato un genere
     def getAllArtistsGenre(self, genreId):
         return DAO.getArtistGenre(genreId)
 
+    # nodi: artisti che possiedono almeno un brano del genere selezionato
+    # archi: artisti per cui esiste almeno un cliente che ha acquistato brani di entrambi gli artisti
+    # peso: somma delle popolarità (brani acquistati dell'artista appartenenti al genere scelto)
     def buildGraph(self, genreId):
         self._graph= nx.DiGraph()
         nodi= DAO.getArtistGenre(genreId)
@@ -49,6 +52,7 @@ class Model:
                     self._graph.add_edge(v, u, weight=weight)
 
 
+    # artista più influente / nodi in ordine di influenza
     def getArtistaPiuInfluente(self):
         lista_tuple_artisti_influenza=[]
         for artista in self._graph.nodes:
@@ -61,16 +65,20 @@ class Model:
         artisti_ordinati_influenza= sorted(lista_tuple_artisti_influenza, key=lambda x: x[1], reverse= True)
         return artisti_ordinati_influenza[0]
 
+
+    # archi di peso maggiore
     def getArchiPesoMaggiore(self):
         archi_ord= list(sorted(self._graph.edges (data=True), key=lambda x: x[2]["weight"], reverse = True))
         return archi_ord[:5]
 
 
+    # graph details
     def getGraphDetails (self):
         n_nodi= len(self._graph.nodes)
         n_archi = len(self._graph.edges)
         return n_nodi, n_archi
 
+    # percorso più lungo con ricorsiva
     def getLongestPath(self, source):
         parziale=[source]
         self.ricorsivaLongestPath(parziale)
@@ -87,7 +95,7 @@ class Model:
                 self.ricorsivaLongestPath(parziale)
                 parziale.pop()
 
-
+    # cammmino di lunghezza massima con peso degli archi crescente
     def getCamminoPesoASC(self, source):
         parziale = [source]
         self.ricorsivaCamminoPesoASC(parziale)
